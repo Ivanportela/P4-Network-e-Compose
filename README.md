@@ -98,8 +98,104 @@ Debremos de facer o mesmo que no paso 4, e dicir actualizaremos e descargaremos 
 
 Docker compose:
 
-Segue os pasos da guía de iniciación de docker-compose, e explica coas túas palabras os pasos que segues e qué fan
+**Segue os pasos da guía de iniciación de docker-compose, e explica coas túas palabras os pasos que segues e qué fan**
 
-Agora que sabes algo máis de docker-compose, crea un arquivo (ou varios arquivos) de configuración que ó ser lanzados cun docker-compose up, resulten nunha rede docker á que estean conectados 3 contenedores, explica os parámetros do .yaml usado
+Imos comezar cos pasos para realizar este apartado:
+**Paso 1: Configuración inicial**
 
-Busca e proba 4 parámetros e configuracións diferentes que podes incluir no arquivo compose, explica qué fan. (por exemplo diferentes cousas que facer coa opción RUN)
+Crear un directorio para o proxecto:
+
+    Créase unha carpeta chamada composetest para almacenar os arquivos do proxecto.
+    Crear o arquivo app.py:
+        Este arquivo contén o código dunha aplicación web en Python usando Flask.
+        A aplicación ten un contador que conta cantas veces se accedeu á páxina, almacenando este dato nun servizo Redis.
+        Redis é un almacén de datos en memoria que se usará para gardar o número de visitas.
+    Crear o arquivo requirements.txt:
+        Este arquivo lista as dependencias que necesita a aplicación (flask e redis), as cales se instalarán máis adiante.
+    Crear un Dockerfile:
+        Especifica como construir a imaxe de Docker para a aplicación.
+        Inclúe pasos como copiar os arquivos ao contedor, instalar dependencias, expoñer un porto para a aplicación e configurar o comando para executar a aplicación.
+
+**Paso 2: Definir os servizos nun arquivo Compose**
+
+Crear o arquivo compose.yaml:
+
+    Este arquivo define os servizos que se executarán con Docker Compose.
+    Inclúe dous servizos:
+        Web: A aplicación web que se constrúe a partir do Dockerfile.
+        Redis: Utiliza unha imaxe de Redis preconstruída dende Docker Hub.
+
+**Paso 3: Construír e executar a aplicación con Compose**
+
+Executar docker compose up:
+
+    Con un só comando, créanse e iníciase os servizos definidos en compose.yaml.
+    Isto inclúe a creación dunha rede predeterminada para a comunicación entre os servizos.
+
+**Paso 4: Editar o arquivo Compose para usar "Compose Watch"**
+
+Engadir soporte para "watch" no arquivo compose.yaml:
+
+    Isto permite que os cambios nos arquivos se sincronicen automáticamente co contedor, sen necesidade de reiniciar manualmente.
+
+**Paso 5: Volver a construir e executar a aplicación**
+
+Usar docker compose watch ou docker compose up --watch:
+
+    Executa a aplicación e habilita a sincronización automática de arquivos, o que facilita o desenvolvemento.
+
+**Paso 6: Actualizar a aplicación**
+
+Modificar o mensaxe en app.py e gardar os cambios:
+
+    Cando se garda o arquivo, a aplicación actualízase automáticamente no contedor, grazas á sincronización habilitada.
+
+**Paso 7: Dividir os servizos en varios arquivos Compose**
+
+Crear un novo arquivo infra.yaml:
+
+    Mover o servizo Redis a este arquivo para modularizar a configuración.
+    Actualízase compose.yaml para incluír o novo arquivo.
+
+**Paso 8: Experimentar con outros comandos**
+
+Correr os servizos en modo "detached" -d:
+
+    Isto permite executar os servizos en segundo plano.
+    Usar docker compose ps para ver os servizos en execución.
+    Deter os servizos con docker compose stop ou eliminalos con docker compose down.
+
+
+**Agora que sabes algo máis de docker-compose, crea un arquivo (ou varios arquivos) de configuración que ó ser lanzados cun docker-compose up, resulten nunha rede docker á que estean conectados 3 contenedores, explica os parámetros do .yaml usado**
+Versión: Isto indica a versión de Docker Compose que estou utilizando.
+
+Servizos: Esta sección define os diferentes contedores que se executarán. No meu caso, definín tres servizos: web1, web2 e web3.
+
+web1, web2, web3: Cada un destes é un servizo que representa un contedor de Nginx.
+
+imagen: nginx Utilizo a imaxe oficial de Nginx.
+
+container_name: nome do contedor
+
+redes: Indica as redes ás que se conectará o contedor.
+
+ports: Mapea un porto do host ao porto do contedor.
+
+restart: always: Este parámetro indica que o contedor reiniciarase automáticamente se se detén.
+
+volumes: Monta un directorio do host nun directorio do contedor.
+
+redes: Aquí define as redes que usarán os contedores.
+
+mi_red: É o nome da rede que creei. O driver bridge é o predeterminado e permite a comunicación entre contedores na mesma rede.
+
+
+**Busca e proba 4 parámetros e configuracións diferentes que podes incluir no arquivo compose, explica qué fan. (por exemplo diferentes cousas que facer coa opción RUN)**
+
+Environment: Establece variables de entorno que poden ser utilizadas pola aplicación dentro do contedor.
+
+depends_on: Este parámetro especifica que un servizo depende doutro, garantindo que se inicie na orde correcta.
+
+build: Se necesitas crear unha imaxe personalizada, podes especificar o contexto de construción.
+
+healthcheck: Podes definir un control de saúde para monitorizar o estado do contedor.
